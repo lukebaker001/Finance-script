@@ -1,18 +1,23 @@
+function getAuthHeader(){
+  var authHeader = "Basic " + Utilities.base64Encode('Q0DUzr5AclFU47BBUOLZuDPnzssMnqOed5KtxF0Mtw3o0iH3Eu:fyVaaG2H04M2FSkAX3mSow32UhAO2RH2QKFxUln4')
+  Logger.log(authHeader)
+  var URI = encodeURIComponent("Basic UT==")
+  Logger.log(URI)
+}
 
 function run() {
   getService().reset(); 
   var service = getService();
   var authorizationUrl = service.getAuthorizationUrl()
-  Logger.log(authorizationUrl);
   var img = "https://drive.google.com/uc?export=download&id=103lt6K977dnQpvPNzVeaIKZ_2Optn7SW"
   var html = '<html><body><a href="'+authorizationUrl+'" target="blank" onclick="google.script.host.close()"><img src="'+img+'" title="Connect to Quickbooks" width=351 height=61></a></body></html>'
   var interface = HtmlService.createHtmlOutput(html).setHeight(80).setWidth(390)
-  SpreadsheetApp.getUi().showModelessDialog(interface,"Quickbooks must be authorized to continue (sandbox)");
+  SpreadsheetApp.getUi().showModelessDialog(interface,"Quickbooks must be authorized to continue");
   }
 
 //Configures the service.
 function getService() {
-  return OAuth2.createService('Quickbooks Sandbox')
+  return OAuth2.createService('Quickbooks')
       .setAuthorizationBaseUrl(baseAuthURL)
       .setTokenUrl(tokenURL)
       .setClientId(clientId)
@@ -34,6 +39,7 @@ function authCallback(request) {
   var headers = {
     'Authorization': encode
   };
+  var redirectURI = 'https://script.google.com/macros/d/1hZikzgbbVMdAQqENs8I8b_J-pw19F1XmasGBjaas-C0TEHgu9QyDPU5I/usercallback';
   var options = {
     method: "POST",
     contentType: "application/x-www-form-urlencoded",
@@ -91,6 +97,7 @@ function refreshAccess() {
   var headers = {
     'Authorization': encode
   };
+  var redirectURI = 'https://script.google.com/macros/d/1hZikzgbbVMdAQqENs8I8b_J-pw19F1XmasGBjaas-C0TEHgu9QyDPU5I/usercallback';
   var options = {
     method: "POST",
     contentType: "application/x-www-form-urlencoded",

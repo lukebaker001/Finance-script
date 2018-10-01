@@ -1,16 +1,16 @@
-var clientId = 'Q0DUzr5AclFU47BBUOLZuDPnzssMnqOed5KtxF0Mtw3o0iH3Eu'; //sandbox values
-var clientSecret = 'fyVaaG2H04M2FSkAX3mSow32UhAO2RH2QKFxUln4'; //sandbox values
+var clientId = 'Q06gH4PJkQj0561JLFcvmS1inEyBbqgt3fwWFWrH5mQkRoYt5n';
+var clientSecret = 'A21oPmSBzvp8lJ0aQooQLWKRoUpUVNioKzYXV7In';
 var baseAuthURL = 'https://appcenter.intuit.com/connect/oauth2';
 var tokenURL = 'https://oauth.platform.intuit.com/oauth2/v1/tokens/bearer';
 var accountingSandboxURL = 'https://sandbox-quickbooks.api.intuit.com';
 var accountingProductionURL = 'https://quickbooks.api.intuit.com'
-var accountingURL = accountingSandboxURL
+var accountingURL = accountingProductionURL
 var APIScope = 'com.intuit.quickbooks.accounting';
-var realmID = 123146096253614
+var realmID = 1419296350
 var fullBaseURL = accountingURL+'/v3/company/'+realmID+'/'
 var webhookToken = 'a52bfe88-8e0d-4fad-a441-fa53e03b51d4';
-var webhook = 'https://script.google.com/macros/s/AKfycbw6DQ_o9RMW40uy04hOlYSWVY_MIUR209JPhBXRFt3OtIZmiwI/exec'
-var redirectURI = 'https://script.google.com/macros/d/1Y-HHRzlautEihqn4X84TMVFGqrG0B3JFepHJr0UQDinepxUFynvz7vsR/usercallback';
+var webhook = "https://script.google.com/macros/s/AKfycbw9Yo3RdsvxiEpeycm2NUNnYvrWdQo1AQCjvmfnDpaKKBVjo56b/exec"
+var redirectURI = 'https://script.google.com/macros/d/1hZikzgbbVMdAQqENs8I8b_J-pw19F1XmasGBjaas-C0TEHgu9QyDPU5I/usercallback';
 var dateFormat = "YYYY-MM-dd"
 var timeFormat = "HH:mm:ss"  ////QBO time format is weird (UTC time shown with non-UTC offset - see Build section)
 var responseType = 'code';
@@ -96,7 +96,6 @@ function update(resourceName,details) {
   var callURL = fullBaseURL + resourceName
   var sent = postRequest(callURL,payload)
   return sent
-
 }
 
 function deleteEntity(resourceName) {
@@ -105,217 +104,39 @@ function deleteEntity(resourceName) {
   var callURL = fullBaseURL + resourceName + deleteString
   var sent = postRequest(callURL,payload)
   return sent
-
 }
 
 function batchRequest(){
   
 }
 
-
-function changeDataRequest(uniqueString,timeDateCondition) {
-  var properties = PropertiesService.getScriptProperties()
-  var lastCDCTime = properties.getProperty('lastCDCTime')
-  var query = "cdc?entities="
-  var callURL = fullBaseURL + query + uniqueString + "&changedSince=" +timeDateCondition
-  var sent = getRequest(callURL)
-  
-  return sent
-}
-
-
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////HTTP FUNCTIONS
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////HTTP FUNCTIONS
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////HTTP FUNCTIONS
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////HTTP FUNCTIONS
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////HTTP FUNCTIONS
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////HTTP FUNCTIONS
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////HTTP FUNCTIONS
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////HTTP FUNCTIONS
-
-
-function entries() {
-  var string = '[{"name":"Purchase","id":"182","operation":"Create","lastUpdated":"2018-09-26T23:26:47.000Z"}]'
-  var object = JSON.parse(string)
-  Logger.log("object")
-  var name = object[0].name
-  Logger.log(name)
-}
-
 function doPost(post) {
-  var now = Utilities.formatDate(new Date(),timezone,"YYYY-MM-dd HH:mm:ss")
-  var spreadsheet = SpreadsheetApp.openById('1C3FJP9N_jwFJyC76BomYt8lnxhWArldbjmEqtYShuvg');
-  var logSheet = spreadsheet.getSheetByName('Webhook Log');
-  var tempLogSheet = spreadsheet.getSheetByName('Unlogged webhooks');
-  var rawPost = JSON.stringify(post);
-  
-  var postData = post.postData
-  var contents = postData.contents
-  var startIndex = contents.indexOf('"entities":')+11
-  var endIndex = contents.indexOf("}}]}")
-  var contentString = contents.slice(startIndex,endIndex)
-  var entityArray = JSON.parse(contentString)
-  var entityCount = entityArray.length
-  var dataArray = []
-  entityArray.forEach(function(entity) {
-      var lineArray = []
-      var entityName = entity.name
-      var entityId = entity.id
-      var entityOperation = entity.operation
-      var entityLastUpdated = entity.lastUpdated
-      lineArray.push(now)
-      lineArray.push(entityName);
-    lineArray.push(entityId);
-    lineArray.push(entityOperation);
-    lineArray.push(entityLastUpdated);
-    if (entity.deletedId) {
-      var deletedId = entity.deletedId
-      lineArray.push(deletedId)
-    }
-    else {
-      lineArray.push("")
-    }
-    lineArray.push(rawPost)
-    dataArray.push(lineArray);
-  })
-      
-var logLength = dataArray.length
-logSheet.insertRowsBefore(3,logLength)
-var logRange = logSheet.getRange(3,1,logLength,7)
-logRange.setValues(dataArray)
+//  Logger.log("Post received")
+//  var timezone = Session.getScriptTimeZone()
+//  var spreadsheet = SpreadsheetApp.openById('1tZQfXgZ5eV2J6Fk7UCo3nK3vJ63ihdVnyhDBDZXbrMs');
+//  var logSheet = spreadsheet.getSheetByName('Webhook Log');
+//  var rawPost = JSON.stringify(post);
+//  var eventArray = post.postData.contents.eventNotifications;
+//  var eventCount = eventArray.length;
+//  eventArray.forEach(function(event) {
+//    entityArray = event.entities
+//    entities.forEach
+//      
+//      
+//  var inputArray = []
+//  var now = Utilities.formatDate(new Date(),timezone,"YYYY-MM-dd HH:mm:ss zzzz")
+//  inputArray.push(now);
+//  inputArray.push(rawPost);
+//  logSheet.appendRow(inputArray)
+  var response = HtmlService.createHtmlOutput();
+  return response;
 
-tempLogSheet.insertRowsBefore(3,logLength)
-var tempLogRange = tempLogSheet.getRange(3,1,logLength,7)
-tempLogRange.setValues(dataArray)
 
-var setTrigger = updateTrigger()
-var response = HtmlService.createHtmlOutput()
-return response
 }
-
-
 
 function doGet(){
   Logger.log("doGet received")
   return HtmlService.createHtmlOutput('<b>GET request received successfully!</b>')
-}
-
-
-
-function updateTrigger() { //checks if there is an existing sweep trigger, if so deletes it, and creates a new clock trigger for sweep after several minutes
-  var triggerArray = ScriptApp.getProjectTriggers()
-  triggerArray.forEach(function(trigger) {
-    var sourceFunction = trigger.getHandlerFunction()
-    if (sourceFunction == "sweepUpdates") ScriptApp.deleteTrigger(trigger)
-  })
-  ScriptApp.newTrigger("sweepUpdates")
-  .timeBased()
-  .after(3*60*1000)
-  .create()
-}
-
-
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////SWEEP UPDATES
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////SWEEP UPDATES
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////SWEEP UPDATES
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////SWEEP UPDATES
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////SWEEP UPDATES
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////SWEEP UPDATES
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////SWEEP UPDATES
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////SWEEP UPDATES
-
-function sweepUpdates() {
-  var spreadsheet = SpreadsheetApp.openById('1C3FJP9N_jwFJyC76BomYt8lnxhWArldbjmEqtYShuvg');
-  var logSheet = spreadsheet.getSheetByName('Webhook Log');
-  var tempLogSheet = spreadsheet.getSheetByName('Unlogged webhooks');
-  var logLength = tempLogSheet.getLastRow() - 2
-  var logArray = tempLogSheet.getRange(3,2,logLength,4).getValues()
-  var unique = []
-  var times = []
-  for (var i = 0; i<logArray.length; i++) {
-    var timestamp = new Date(logArray[i][3])
-    var element = logArray[i][0]
-    times.push(timestamp)
-    if (unique.indexOf(element) <0) {
-      unique.push(element)
-    }
-  }
-  var orderedTimes = times.sort(function(a,b){
-        return a - b;
-  })
-  var earliestTime = new Date(orderedTimes[0])
-  
-  var dateBuilder = Utilities.formatDate(earliestTime,timezone,dateFormat)
-  var timeBuilder = Utilities.formatDate(earliestTime,timezone,timeFormat)
-  var timezoneBuilder = Utilities.formatDate(earliestTime,timezone,"X")
-  var timeDateCondition = dateBuilder+"T"+timeBuilder+timezoneBuilder+":00"
-  Logger.log("timeDateCondition: "+timeDateCondition)
-      
-  var uniqueString = unique.toString()
-  Logger.log(uniqueString)
-  
-  var cDR = changeDataRequest(uniqueString,timeDateCondition) //returns an object
-  //var keys = Object.keys(cDR)
-  //Logger.log("Keys: "+keys)
-  var cDRObject = JSON.parse(cDR)
-  Logger.log("cDRJson: "+cDRObject)
-  var cDRString = JSON.stringify(cDRObject)
-  Logger.log("cDRString: "+cDRString)
-  //var keyss = Object.keys(headers)
-  
-  //Logger.log("Keys: "+keyss)
-  
-  
-  var CDCResponse = cDRObject.CDCResponse[0]
-  var responseArray = CDCResponse.QueryResponse
-  Logger.log(typeof responseArray)
-  var numberOfResponses = responseArray.length
-  Logger.log(numberOfResponses)
-  var count = 0
-  responseArray.forEach(function(e) {
-    count++
-    var keys = Object.keys(e)
-    var entityType = keys[0]
-    var changeArray = e[entityType]
-    changeArray.forEach(function(f) {
-      
-    Logger.log("count: "+count)
-    Logger.log("entityType: "+entityType)
-    Logger.log("changeArray: "+changeArray)
-    switch(entityType){
-      case "Purchase":
-        break;
-      case "BillPayment":
-        break;
-      case "Bill":
-        break;
-      case "Item":
-        break;
-      case "PurchaseOrder":
-        break;
-      case "Payment":
-        break;
-      case "Invoice":
-        break;
-      case "SalesReceipt":
-        break;
-      case "Purchase":
-        break;
-      case "Account":
-        break;
-      case "Vendor":
-        break;
-      case "Customer":
-        break;
-      case "Class":
-        break;
-      default:
-        
-        break;
-    }
-      
-    })
-  })
 }
 
 ///////////////////////////////////////////////////////////CUSTOM QUERY///////////////////////////////////////////////////////CUSTOM QUERY
@@ -601,3 +422,35 @@ function importAllPurchases(){
   }
   
 }
+
+function test() {
+  var post = {
+    "parameter":{},
+    "contextPath":"",
+    "contentLength":176,
+    "queryString":"",
+    "parameters":{},
+    "postData":
+    {
+      "type":"application/json",
+      "length":176,
+      "contents": {
+        "eventNotifications": [{
+          "realmId":"1419296350",
+          "dataChangeEvent": {
+            "entities":
+            [
+              {
+                "name":"Purchase",
+                "id":"9189",
+                "operation":"Update",
+                "lastUpdated":"2018-09-26T17:47:53.000Z"
+              }
+            ]
+          }
+        }]
+      },
+      "name":"postData"
+    }
+  }
+  }
